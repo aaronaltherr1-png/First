@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BrainSwipe Learning App MVP</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+        header { background-color: #4CAF50; color: white; padding: 10px 0; text-align: center; }
+        nav { margin: 20px 0; }
+        nav button { margin: 0 5px; padding: 10px 15px; }
+        section { padding: 20px; }
+        .card { border: 1px solid #ccc; padding: 10px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>BrainSwipe Learning App</h1>
+        <nav>
+            <button onclick="showHome()">Home</button>
+            <button onclick="showLearnMode()">Learn Mode</button>
+            <button onclick="showQuizMode()">Quiz Mode</button>
+            <button onclick="showRandomMode()">Random Mode</button>
+            <button onclick="showCreateCard()">Create Card</button>
+        </nav>
+    </header>
+    <section id="content">
+        <h2>Welcome to BrainSwipe!</h2>
+        <p>Select a mode to start learning.</p>
+    </section>
+    <script>
+        const topics = {
+            geography: [{ question: 'What is the capital of France?', answer: 'Paris' }, { question: 'Which river flows through Egypt?', answer: 'Nile' }],
+            generalKnowledge: [{ question: 'What is the smallest planet in our solar system?', answer: 'Mercury' }, { question: 'Who wrote Romeo and Juliet?', answer: 'William Shakespeare' }],
+            IT: [{ question: 'What does HTML stand for?', answer: 'HyperText Markup Language' }, { question: 'What is the main function of the CPU?', answer: 'To execute instructions' }]
+        };
+
+        function showHome() {
+            document.getElementById('content').innerHTML = '<h2>Welcome to BrainSwipe!</h2><p>Select a mode to start learning.</p>';
+        }
+
+        function showLearnMode() {
+            let html = '<h2>Learn Mode</h2>';
+            for (let topic in topics) {
+                html += '<h3>' + topic + '</h3>';
+                topics[topic].forEach(card => {
+                    html += '<div class="card"><strong>Q:</strong> ' + card.question + '<br><strong>A:</strong> ' + card.answer + '</div>';
+                });
+            }
+            document.getElementById('content').innerHTML = html;
+        }
+
+        function showQuizMode() {
+            document.getElementById('content').innerHTML = '<h2>Quiz Mode - Coming Soon!</h2>';
+        }
+
+        function showRandomMode() {
+            document.getElementById('content').innerHTML = '<h2>Random Mode - Coming Soon!</h2>';
+        }
+
+        function showCreateCard() {
+            document.getElementById('content').innerHTML = '<h2>Create Card - Coming Soon!</h2>';
+        }
+    </script>
+</body>
+</html>
