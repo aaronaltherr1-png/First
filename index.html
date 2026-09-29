@@ -27,10 +27,15 @@
     .controls { position:absolute; z-index:11; top:73px; left:28px; display:flex; gap:8px; }.button { cursor:pointer; border:1px solid rgba(255,255,255,.22); color:#fff; background:rgba(8,11,16,.63); padding:9px 13px; text-transform:uppercase; letter-spacing:.09em; font:700 10px Arial; transition:.2s; }.button:hover,.button.active { background:var(--amber); color:#111; border-color:var(--amber); }.record { position:absolute; z-index:12; top:73px; right:28px; display:flex; align-items:center; gap:8px; padding:10px 13px; font-size:10px; letter-spacing:.1em; background:rgba(8,11,16,.63); border:1px solid rgba(255,255,255,.18); cursor:pointer; }.recording .dot { animation:pulse .8s infinite alternate; } @keyframes pulse { to { opacity:.25; transform:scale(.6) } }
     .speed { position:absolute; z-index:7; right:9%; bottom:30%; font-size:clamp(29px,4vw,53px); font-weight:bold; font-style:italic; letter-spacing:-.08em; opacity:.85; }.speed small { font-size:11px; letter-spacing:.08em; }
     .flash { animation:flash 3.7s infinite; } @keyframes flash { 0%,45%,47%,92%,100% { opacity:1 } 46%,93% { opacity:.45 } }
+    .opening { position:fixed; z-index:30; inset:0; display:grid; place-items:center; text-align:center; background:radial-gradient(circle at 50% 70%,rgba(78,45,24,.31),#05070c 62%); transition:opacity .8s ease,visibility .8s ease; }
+    .opening.hidden { opacity:0; visibility:hidden; }.opening-inner { max-width:560px; padding:28px; }.opening-kicker { margin:0 0 15px; color:var(--amber); font-size:11px; font-weight:bold; letter-spacing:.22em; text-transform:uppercase; }.opening h2 { margin:0; font-size:clamp(54px,11vw,112px); line-height:.8; letter-spacing:-.09em; text-transform:uppercase; }.opening p { max-width:330px; margin:23px auto; color:#b4bbc5; }.start-film { padding:15px 23px; border:0; background:var(--amber); color:#0a0c10; cursor:pointer; font-weight:900; font-size:12px; letter-spacing:.13em; text-transform:uppercase; }.start-film:hover { background:#ffd08a; }
     @media (max-width:600px) { header {padding:17px}.controls{left:17px;top:61px}.record{right:17px;top:61px}.hud{left:17px;right:17px;bottom:18px}.status{display:none}.car{width:88vw;height:43vw;bottom:20%}.speed{right:8%;bottom:39%}.title{font-size:38px} }
   </style>
 </head>
 <body>
+  <section class="opening" id="opening" aria-label="Filmstart">
+    <div class="opening-inner"><p class="opening-kicker">Eine interaktive Filmsequenz</p><h2>Last<br>Light</h2><p>Eine Verfolgungsjagd durch die regennasse Innenstadt. Du führst die Kamera.</p><button class="start-film" id="startFilm">Film starten</button></div>
+  </section>
   <main id="stage">
     <header><div class="brand">LAST <b>LIGHT</b> <span style="font-weight:400;color:#8c94a0">/ Pursuit Unit</span></div><div class="live"><i class="dot"></i> LIVE CAMERA FEED</div></header>
     <div class="controls"><button class="button active" id="drive">Verfolgung starten</button><button class="button" id="view">Kamera: Heck</button></div>
@@ -42,9 +47,11 @@
     <div class="hud"><div><div class="chapter">Kapitel 01 / Die Nacht gehört uns</div><h1 class="title">Keine Ausfahrt.</h1></div><div class="status"><strong id="status">EINSATZ BEREIT</strong><span>RAVEN-7 · Innenstadt · 02:17 Uhr</span></div></div>
   </main>
   <script>
-    const drive=document.querySelector('#drive'), speed=document.querySelector('#speed'), car=document.querySelector('#car'), status=document.querySelector('#status'), record=document.querySelector('#record'), view=document.querySelector('#view');
-    let active=false, rear=true, recording=false;
-    drive.onclick=()=>{ active=!active; drive.textContent=active?'Verfolgung pausieren':'Verfolgung starten'; drive.classList.toggle('active',active); status.textContent=active?'VERFOLGUNG AKTIV':'EINSATZ BEREIT'; car.style.animation=active?'shake .19s infinite alternate':''; let n=active?84:0; clearInterval(window.meter); window.meter=setInterval(()=>{ if(!active)return; n=92+Math.floor(Math.random()*48); speed.innerHTML=String(n).padStart(3,'0')+' <small>KM/H</small>'; },480); };
+    const drive=document.querySelector('#drive'), speed=document.querySelector('#speed'), car=document.querySelector('#car'), status=document.querySelector('#status'), record=document.querySelector('#record'), view=document.querySelector('#view'), opening=document.querySelector('#opening'), startFilm=document.querySelector('#startFilm');
+    let active=false, rear=true, recording=false, meter;
+    function setPursuit(shouldRun) { active=shouldRun; drive.textContent=active?'Verfolgung pausieren':'Verfolgung starten'; drive.classList.toggle('active',active); status.textContent=active?'VERFOLGUNG AKTIV':'EINSATZ BEREIT'; car.style.animation=active?'shake .19s infinite alternate':''; clearInterval(meter); if (active) meter=setInterval(()=>{ const n=92+Math.floor(Math.random()*48); speed.innerHTML=String(n).padStart(3,'0')+' <small>KM/H</small>'; },480); }
+    startFilm.onclick=()=>{ opening.classList.add('hidden'); setPursuit(true); record.click(); };
+    drive.onclick=()=>setPursuit(!active);
     view.onclick=()=>{rear=!rear; view.textContent=rear?'Kamera: Heck':'Kamera: Dash'; document.querySelector('#scene').style.filter=rear?'none':'sepia(.18) contrast(1.15)';};
     record.onclick=()=>{recording=!recording; record.classList.toggle('recording',recording); record.querySelector('span').textContent=recording?'AUFNAHME LÄUFT':'AUFZEICHNEN';};
     const style=document.createElement('style'); style.textContent='@keyframes shake{from{transform:translateX(-50%) translateY(0)}to{transform:translateX(calc(-50% + 3px)) translateY(-3px)}}';document.head.append(style);
