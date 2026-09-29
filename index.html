@@ -1,17 +1,60 @@
-# BrainSwipe Learning App MVP
-
-## Features:
-- Home dashboard with 3 decks (Geografie, Allgemeinwissen, IT)
-- Learning mode with flip card animation
-- Quiz mode with multiple choice questions
-- Random feed with voting
-- Card creation form
-- Bottom navigation
-- Modern gradient design with indigo and pink colors
-- Mobile-first responsive layout
-- German language support
-- Mock data with all interactive JavaScript functionality
-
----
-
-This file contains the outline and details for the BrainSwipe learning application MVP.
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LAST LIGHT — Pursuit Unit</title>
+  <style>
+    :root { --amber:#ffba52; --ink:#07090d; --panel:rgba(9,12,18,.76); --muted:#9da5b3; }
+    * { box-sizing:border-box } body { margin:0; background:#06080c; color:#f6f2e9; font:13px/1.35 Arial,sans-serif; overflow:hidden; }
+    #stage { min-height:100vh; position:relative; isolation:isolate; background:radial-gradient(ellipse at 50% 100%,#33281e 0%,#11131a 37%,#07090d 72%); }
+    #grain { pointer-events:none; position:absolute; inset:0; opacity:.1; z-index:8; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E"); mix-blend-mode:screen; }
+    header { position:absolute; z-index:10; top:0; width:100%; padding:21px 28px; display:flex; justify-content:space-between; align-items:center; letter-spacing:.12em; text-transform:uppercase; }
+    .brand { font-size:15px; font-weight:800; }.brand b { color:var(--amber) }.live { display:flex; gap:9px; align-items:center; color:#d9dce0; font-size:10px; }.dot { width:7px; height:7px; background:#ff4242; border-radius:50%; box-shadow:0 0 11px #ff3131; }
+    .scene { position:absolute; inset:0; overflow:hidden; perspective:800px; }
+    .skyline { position:absolute; bottom:36%; left:-4%; width:108%; height:30%; opacity:.65; background:linear-gradient(90deg,#0a0f16 0 3%,transparent 3% 4%,#111820 4% 8%,transparent 8% 9%,#0b1219 9% 14%,transparent 14% 16%,#10161d 16% 22%,transparent 22% 23%,#0a1018 23% 29%,transparent 29% 31%,#11171e 31% 38%,transparent 38% 40%,#0c1219 40% 46%,transparent 46% 47%,#10171f 47% 57%,transparent 57% 59%,#0d131b 59% 69%,transparent 69% 71%,#111820 71% 81%,transparent 81% 82%,#0a0f16 82% 100%); clip-path:polygon(0 42%,4% 42%,4% 25%,8% 25%,8% 56%,13% 56%,13% 8%,19% 8%,19% 45%,25% 45%,25% 15%,29% 15%,29% 51%,36% 51%,36% 1%,43% 1%,43% 39%,51% 39%,51% 21%,55% 21%,55% 55%,62% 55%,62% 10%,67% 10%,67% 47%,73% 47%,73% 18%,80% 18%,80% 41%,87% 41%,87% 4%,93% 4%,93% 50%,100% 50%,100% 100%,0 100%); }
+    .road { position:absolute; z-index:2; left:-14%; right:-14%; bottom:-20%; height:67%; background:linear-gradient(105deg,transparent 0 30%,rgba(255,185,76,.18) 30.3% 30.8%,transparent 31.1% 47%,rgba(255,185,76,.2) 47.3% 47.8%,transparent 48.1% 100%),linear-gradient(170deg,#25272d 0%,#0e1118 41%,#050609 100%); transform:rotateX(57deg); transform-origin:bottom; }
+    .road:after { content:""; position:absolute; inset:0; background:repeating-linear-gradient(93deg,transparent 0 9%,rgba(255,255,255,.34) 9.1% 9.4%,transparent 9.5% 20%); opacity:.4; }
+    .street-lights { position:absolute; inset:0; z-index:3; background:radial-gradient(circle at 7% 54%,#ffbb51 0 1px,transparent 2px),radial-gradient(circle at 17% 46%,#d99441 0 1px,transparent 2px),radial-gradient(circle at 76% 50%,#ffcc72 0 1px,transparent 2px),radial-gradient(circle at 88% 43%,#e7a955 0 2px,transparent 4px),radial-gradient(circle at 66% 34%,#f8bf66 0 1px,transparent 3px); filter:blur(.3px); }
+    .car { position:absolute; z-index:5; bottom:13%; left:50%; width:min(47vw,620px); height:22vw; max-height:285px; transform:translateX(-50%); filter:drop-shadow(0 35px 26px #000); }
+    .car-body { position:absolute; bottom:0; width:100%; height:51%; background:linear-gradient(160deg,#eef0ef 0 5%,#68727a 9%,#1c252d 32%,#10151b 69%,#05070a); border-radius:42% 48% 13% 13% / 50% 48% 14% 14%; border-top:2px solid rgba(222,239,246,.5); overflow:hidden; }
+    .windshield { position:absolute; left:24%; top:8%; width:52%; height:45%; background:linear-gradient(130deg,rgba(108,159,179,.82),rgba(7,16,23,.95) 42%,rgba(45,72,84,.75)); clip-path:polygon(19% 0,80% 0,100% 100%,0 100%); border-radius:25% 25% 2px 2px; }
+    .windshield:after { content:""; position:absolute; inset:12% 9%; background:linear-gradient(110deg,transparent 32%,rgba(177,217,232,.29) 34% 42%,transparent 44%); }
+    .light { position:absolute; top:45%; width:18%; height:13%; border-radius:45%; filter:blur(1px); box-shadow:0 0 20px currentColor,0 0 52px currentColor; }.light.red { left:12%; color:#ff2d2e; background:#ee3031; }.light.blue { right:12%; color:#2aa3ff; background:#2c8de9; }
+    .bar { position:absolute; z-index:2; left:34%; top:28%; width:32%; height:6%; border-radius:5px; background:linear-gradient(90deg,#ff3033 0 46%,#151c25 47% 53%,#339eff 54%); box-shadow:0 0 18px #158cef; }
+    .bumper { position:absolute; bottom:4%; left:13%; width:74%; height:14%; background:#080b10; border-radius:10px 10px 20px 20px; }.grille { position:absolute; bottom:13%; left:32%; width:36%; height:17%; border-radius:4px; background:repeating-linear-gradient(0deg,#080b0e 0 3px,#303942 4px 5px); }
+    .hud { position:absolute; z-index:10; bottom:24px; left:28px; right:28px; display:flex; justify-content:space-between; align-items:flex-end; }.chapter { font-size:11px; color:var(--amber); letter-spacing:.18em; text-transform:uppercase; }.title { margin:3px 0 0; font-size:clamp(31px,5vw,67px); font-weight:900; letter-spacing:-.07em; line-height:.88; text-transform:uppercase; }.status { background:var(--panel); backdrop-filter:blur(14px); padding:13px 17px; min-width:201px; border-left:2px solid var(--amber); }.status strong { display:block; font-size:11px; letter-spacing:.1em; }.status span { color:var(--muted); font-size:10px; }
+    .controls { position:absolute; z-index:11; top:73px; left:28px; display:flex; gap:8px; }.button { cursor:pointer; border:1px solid rgba(255,255,255,.22); color:#fff; background:rgba(8,11,16,.63); padding:9px 13px; text-transform:uppercase; letter-spacing:.09em; font:700 10px Arial; transition:.2s; }.button:hover,.button.active { background:var(--amber); color:#111; border-color:var(--amber); }.record { position:absolute; z-index:12; top:73px; right:28px; display:flex; align-items:center; gap:8px; padding:10px 13px; font-size:10px; letter-spacing:.1em; background:rgba(8,11,16,.63); border:1px solid rgba(255,255,255,.18); cursor:pointer; }.recording .dot { animation:pulse .8s infinite alternate; } @keyframes pulse { to { opacity:.25; transform:scale(.6) } }
+    .speed { position:absolute; z-index:7; right:9%; bottom:30%; font-size:clamp(29px,4vw,53px); font-weight:bold; font-style:italic; letter-spacing:-.08em; opacity:.85; }.speed small { font-size:11px; letter-spacing:.08em; }
+    .flash { animation:flash 3.7s infinite; } @keyframes flash { 0%,45%,47%,92%,100% { opacity:1 } 46%,93% { opacity:.45 } }
+    .opening { position:fixed; z-index:30; inset:0; display:grid; place-items:center; text-align:center; background:radial-gradient(circle at 50% 70%,rgba(78,45,24,.31),#05070c 62%); transition:opacity .8s ease,visibility .8s ease; }
+    .opening.hidden { opacity:0; visibility:hidden; }.opening-inner { max-width:560px; padding:28px; }.opening-kicker { margin:0 0 15px; color:var(--amber); font-size:11px; font-weight:bold; letter-spacing:.22em; text-transform:uppercase; }.opening h2 { margin:0; font-size:clamp(54px,11vw,112px); line-height:.8; letter-spacing:-.09em; text-transform:uppercase; }.opening p { max-width:330px; margin:23px auto; color:#b4bbc5; }.start-film { padding:15px 23px; border:0; background:var(--amber); color:#0a0c10; cursor:pointer; font-weight:900; font-size:12px; letter-spacing:.13em; text-transform:uppercase; }.start-film:hover { background:#ffd08a; }
+    @media (max-width:600px) { header {padding:17px}.controls{left:17px;top:61px}.record{right:17px;top:61px}.hud{left:17px;right:17px;bottom:18px}.status{display:none}.car{width:88vw;height:43vw;bottom:20%}.speed{right:8%;bottom:39%}.title{font-size:38px} }
+  </style>
+</head>
+<body>
+  <section class="opening" id="opening" aria-label="Filmstart">
+    <div class="opening-inner"><p class="opening-kicker">Eine interaktive Filmsequenz</p><h2>Last<br>Light</h2><p>Eine Verfolgungsjagd durch die regennasse Innenstadt. Du führst die Kamera.</p><button class="start-film" id="startFilm">Film starten</button></div>
+  </section>
+  <main id="stage">
+    <header><div class="brand">LAST <b>LIGHT</b> <span style="font-weight:400;color:#8c94a0">/ Pursuit Unit</span></div><div class="live"><i class="dot"></i> LIVE CAMERA FEED</div></header>
+    <div class="controls"><button class="button active" id="drive">Verfolgung starten</button><button class="button" id="view">Kamera: Heck</button></div>
+    <button class="record" id="record"><i class="dot"></i><span>AUFZEICHNEN</span></button>
+    <section class="scene" id="scene"><div class="skyline"></div><div class="street-lights"></div><div class="road"></div><div class="speed" id="speed">084 <small>KM/H</small></div>
+      <div class="car flash" id="car"><div class="bar"></div><div class="windshield"></div><div class="car-body"></div><div class="light red"></div><div class="light blue"></div><div class="grille"></div><div class="bumper"></div></div>
+    </section>
+    <div id="grain"></div>
+    <div class="hud"><div><div class="chapter">Kapitel 01 / Die Nacht gehört uns</div><h1 class="title">Keine Ausfahrt.</h1></div><div class="status"><strong id="status">EINSATZ BEREIT</strong><span>RAVEN-7 · Innenstadt · 02:17 Uhr</span></div></div>
+  </main>
+  <script>
+    const drive=document.querySelector('#drive'), speed=document.querySelector('#speed'), car=document.querySelector('#car'), status=document.querySelector('#status'), record=document.querySelector('#record'), view=document.querySelector('#view'), opening=document.querySelector('#opening'), startFilm=document.querySelector('#startFilm');
+    let active=false, rear=true, recording=false, meter;
+    function setPursuit(shouldRun) { active=shouldRun; drive.textContent=active?'Verfolgung pausieren':'Verfolgung starten'; drive.classList.toggle('active',active); status.textContent=active?'VERFOLGUNG AKTIV':'EINSATZ BEREIT'; car.style.animation=active?'shake .19s infinite alternate':''; clearInterval(meter); if (active) meter=setInterval(()=>{ const n=92+Math.floor(Math.random()*48); speed.innerHTML=String(n).padStart(3,'0')+' <small>KM/H</small>'; },480); }
+    startFilm.onclick=()=>{ opening.classList.add('hidden'); setPursuit(true); record.click(); };
+    drive.onclick=()=>setPursuit(!active);
+    view.onclick=()=>{rear=!rear; view.textContent=rear?'Kamera: Heck':'Kamera: Dash'; document.querySelector('#scene').style.filter=rear?'none':'sepia(.18) contrast(1.15)';};
+    record.onclick=()=>{recording=!recording; record.classList.toggle('recording',recording); record.querySelector('span').textContent=recording?'AUFNAHME LÄUFT':'AUFZEICHNEN';};
+    const style=document.createElement('style'); style.textContent='@keyframes shake{from{transform:translateX(-50%) translateY(0)}to{transform:translateX(calc(-50% + 3px)) translateY(-3px)}}';document.head.append(style);
+  </script>
+</body>
+</html>
